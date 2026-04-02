@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leisure Park · Guadalpark</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0b1929;--blue:#1d6ef5;--blue-h:#155fd8;--blue-g:rgba(29,110,245,.13);
+  --cyan:#06b6d4;--cyan-lt:#ecfeff;
+  --bg:#f4f6fa;--bg2:#eef1f7;--white:#fff;
+  --text:#0b1929;--t2:#4a5568;--t3:#8fa3b8;
+  --border:#dde3ed;--border2:#c8d2e0;
+  --green:#059669;--green-lt:#ecfdf5;
+  --amber:#d97706;--amber-lt:#fffbeb;
+  --red:#dc2626;--red-lt:#fef2f2;
+  --purple:#7c3aed;--purple-lt:#f5f3ff;
+  --orange:#ea580c;--orange-lt:#fff7ed;
+  --sw:256px;--r:10px;--rl:16px;
+  --s0:0 1px 2px rgba(11,25,41,.06);
+  --s1:0 2px 8px rgba(11,25,41,.07),0 1px 2px rgba(11,25,41,.04);
+  --s2:0 4px 20px rgba(11,25,41,.09),0 1px 4px rgba(11,25,41,.05);
+  --s3:0 16px 48px rgba(11,25,41,.14),0 4px 12px rgba(11,25,41,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:500;display:flex;background:var(--navy)}
+.lgl{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:64px 72px;position:relative;overflow:hidden}
+.lgl::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(29,110,245,.18) 0%,transparent 70%);top:-120px;left:-80px;pointer-events:none}
+.lgl::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.12) 0%,transparent 70%);bottom:-60px;right:40px;pointer-events:none}
+.lg-brand{display:flex;align-items:center;gap:14px;margin-bottom:52px;position:relative;z-index:1}
+.lg-bi{width:50px;height:50px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 24px rgba(29,110,245,.45)}
+.lg-bn{font-family:'Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.lg-bs{font-size:11px;letter-spacing:2.5px;color:rgba(255,255,255,.4);text-transform:uppercase}
+.lg-hl{font-family:'Outfit',sans-serif;font-size:38px;font-weight:800;color:#fff;line-height:1.15;margin-bottom:18px;position:relative;z-index:1;max-width:420px}
+.lg-hl em{font-style:normal;background:linear-gradient(90deg,#60a5fa,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lg-desc{font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;max-width:380px;margin-bottom:44px;position:relative;z-index:1}
+.lg-feats{display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
+.lg-feat{display:flex;align-items:center;gap:12px}
+.lg-fd{width:28px;height:28px;border-radius:8px;background:rgba(29,110,245,.2);border:1px solid rgba(29,110,245,.3);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.lg-feat span{font-size:13px;color:rgba(255,255,255,.65)}
+.lgr{width:480px;background:var(--white);display:flex;align-items:center;justify-content:center;padding:56px 52px;position:relative}
+.lgr::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:1px;background:linear-gradient(to bottom,transparent,rgba(29,110,245,.2),transparent)}
+.lgr-inner{width:100%}
+.lgr-eye{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.lgr-title{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:4px}
+.lgr-sub{font-size:13.5px;color:var(--t3);margin-bottom:34px}
+.lg-err{margin-top:12px;text-align:center;font-size:13px;color:var(--red);font-weight:500;min-height:18px}
+@media(max-width:768px){.lgl{display:none}.lgr{width:100%;padding:40px 28px}}
+/* INPUTS */
+.fg{margin-bottom:18px}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;letter-spacing:.3px}
+.fi-w{position:relative}
+.fi-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:15px;pointer-events:none}
+.fi{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:11px 14px 11px 42px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .18s,box-shadow .18s,background .18s}
+.fi::placeholder{color:var(--t3)}.fi:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-g)}
+.fi.ni{padding-left:14px}.fi.err{border-color:var(--red)!important}
+.fs{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:11px 36px 11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;cursor:pointer;transition:border-color .18s,box-shadow .18s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238fa3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.fs:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-g);background-color:#fff}.fs.err{border-color:var(--red)!important}
+.ft{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;resize:vertical;min-height:88px;transition:border-color .18s,box-shadow .18s}
+.ft:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-g);background:#fff}.ft.err{border-color:var(--red)!important}
+.ferr{font-size:11px;color:var(--red);margin-top:4px;font-weight:500;display:none}.ferr.show{display:block}
+.fnote{font-size:11.5px;color:var(--t3);margin-top:5px}
+.fi:disabled,.fs:disabled{background:var(--bg2);color:var(--t3);cursor:not-allowed;border-style:dashed}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 18px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;line-height:1}
+.btn:active{transform:scale(.98)}
+.btn-p{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(29,110,245,.3)}.btn-p:hover{background:var(--blue-h);box-shadow:0 4px 16px rgba(29,110,245,.4);transform:translateY(-1px)}
+.btn-g{background:transparent;color:var(--t2);border:1.5px solid var(--border2)}.btn-g:hover{background:var(--bg)}
+.btn-d{background:var(--red-lt);color:var(--red);border:1.5px solid rgba(220,38,38,.15)}.btn-d:hover{background:#fee2e2}
+.btn-o{background:var(--orange-lt);color:var(--orange);border:1.5px solid rgba(234,88,12,.15)}.btn-o:hover{background:#ffedd5}
+.btn-amb{background:var(--amber-lt);color:var(--amber);border:1.5px solid rgba(217,119,6,.15)}.btn-amb:hover{background:#fde68a}
+.bti{width:32px;height:32px;padding:0;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--t2);transition:all .15s}
+.bti:hover{background:var(--bg2)}.bti.del:hover{background:var(--red-lt);color:var(--red);border-color:rgba(220,38,38,.2)}.bti.edt:hover{background:var(--blue-g);color:var(--blue);border-color:rgba(29,110,245,.2)}
+.lg-btn{width:100%;margin-top:8px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(29,110,245,.35);display:flex;align-items:center;justify-content:center;gap:8px}
+.lg-btn:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 6px 24px rgba(29,110,245,.45)}
+/* APP */
+#app{display:none;min-height:100vh}.aw{display:flex;min-height:100vh}
+/* SIDEBAR */
+.sb{width:var(--sw);background:var(--navy);position:fixed;top:0;left:0;bottom:0;z-index:50;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.05)}
+.sb-hd{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{display:flex;align-items:center;gap:12px}
+.sb-li{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 4px 12px rgba(29,110,245,.4)}
+.sb-ln{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:#fff;line-height:1.2}
+.sb-ls{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.sb-nav{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.sb-sec{font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:12px 10px 6px}
+.si{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:rgba(255,255,255,.5);font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.si:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.88)}.si.active{background:rgba(29,110,245,.22);color:#fff;font-weight:600;border:1px solid rgba(29,110,245,.25)}.si.active .sic{color:#93c5fd}
+.sic{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.sb-badge{margin-left:auto;color:#fff;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;line-height:1.6}
+.sb-ft{padding:14px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-ui{flex:1;min-width:0}.sb-un{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb-ur{font-size:11px;color:rgba(255,255,255,.38);margin-top:1px}
+.sb-lo{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:16px;padding:4px;transition:color .15s;line-height:1;border-radius:6px}.sb-lo:hover{color:#f87171}
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:64px;background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--s0)}
+.tb-title{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:var(--text)}.tb-sub{font-size:12px;color:var(--t3);margin-top:1px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-chip{font-size:12px;color:var(--t3);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-weight:500}
+.page{padding:28px 32px;flex:1}.view{display:none;animation:vIn .22s ease}.view.active{display:block}
+@keyframes vIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.ph-title{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:var(--text)}.ph-sub{font-size:13px;color:var(--t3);margin-top:3px}
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;margin-bottom:26px}
+.sc{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;box-shadow:var(--s1);display:flex;align-items:center;gap:16px;transition:box-shadow .2s,transform .2s}
+.sc:hover{box-shadow:var(--s2);transform:translateY(-2px)}
+.sci{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.sci.b{background:#eff6ff}.sci.c{background:var(--cyan-lt)}.sci.r{background:var(--red-lt)}.sci.g{background:var(--green-lt)}.sci.p{background:var(--purple-lt)}.sci.o{background:var(--orange-lt)}
+.sc-n{font-family:'Outfit',sans-serif;font-size:30px;font-weight:800;color:var(--text);line-height:1}.sc-l{font-size:12px;color:var(--t3);margin-top:3px;font-weight:500}
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--s1);overflow:hidden}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border)}
+.card-ht{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--text)}.card-hs{font-size:12px;color:var(--t3);margin-top:2px}
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg);border-bottom:1px solid var(--border)}
+th{padding:11px 16px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);text-align:left;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbfd}
+td{padding:13px 16px;font-size:13.5px;color:var(--t2);vertical-align:middle}
+td b{color:var(--text);font-weight:600}.tmono{font-size:12px;color:var(--t3);font-variant-numeric:tabular-nums}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.bl{background:var(--green-lt);color:var(--green)}.bl::before{background:var(--green)}
+.bm{background:var(--amber-lt);color:var(--amber)}.bm::before{background:var(--amber)}
+.bg{background:var(--red-lt);color:var(--red)}.bg::before{background:var(--red)}
+.badm{background:#eff6ff;color:var(--blue)}.bmed{background:var(--green-lt);color:var(--green)}.benf{background:#fdf4ff;color:#9333ea}.bmant{background:var(--orange-lt);color:var(--orange)}.bsocc{background:var(--cyan-lt);color:#0e7490}
+.badge-ok{background:var(--green-lt);color:var(--green)}.badge-ok::before{background:var(--green)}
+.badge-off{background:#f3f4f6;color:var(--t3)}.badge-off::before{background:var(--t3)}
+/* Priority badges */
+.p-baja{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}.p-media{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.p-alta{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}.p-critica{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+/* Codigo gravedad socc */
+.cg-verde{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.cg-amarillo{background:#fef9c3;color:#854d0e;border:1px solid #fde047}
+.cg-rojo{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.cg-negro{background:#1f2937;color:#f9fafb;border:1px solid #374151}
+/* FORM CARD */
+.fc{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--s1);overflow:hidden}
+.fs-sec{padding:24px 28px;border-bottom:1px solid var(--border)}.fs-sec:last-of-type{border-bottom:none}
+.fs-title{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.fs-title::before{content:'';width:3px;height:16px;background:var(--blue);border-radius:2px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.full{grid-column:1/-1}
+.ff{padding:18px 28px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border);background:var(--bg)}
+/* FILTERS */
+.filters{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 22px;margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;box-shadow:var(--s1)}
+.fc-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:155px}
+.fc-lbl{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3)}
+.fi2{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.fi2:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-g);background:#fff}
+.fs2{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;cursor:pointer;appearance:none;transition:border-color .15s}
+.fs2:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-g);background:#fff}
+/* MODAL */
+.ov{position:fixed;inset:0;z-index:300;background:rgba(11,25,41,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center}
+.ov.show{display:flex}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--s3);width:90%;max-width:660px;max-height:92vh;overflow-y:auto;animation:mIn .2s ease}
+.modal.sm{max-width:440px}.modal.md{max-width:540px}
+@keyframes mIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--white);z-index:1}
+.mhd-l{display:flex;align-items:center;gap:13px}
+.mhd-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.mhd-title{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:var(--text)}.mhd-sub{font-size:12px;color:var(--t3);margin-top:1px}
+.mhd-r{display:flex;gap:8px;align-items:center}
+.mbody{padding:24px}.msec{margin-bottom:22px}.msec:last-child{margin-bottom:0}
+.mslbl{font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.df{grid-column:1/-1}
+.di .dl{font-size:11px;color:var(--t3);margin-bottom:3px;font-weight:500}.di .dv{font-size:14px;color:var(--text);font-weight:500}
+.mft{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;background:var(--bg);border-radius:0 0 var(--rl) var(--rl)}
+/* CONFIRM */
+.conf-ic{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+.conf-title{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;text-align:center;margin-bottom:8px}
+.conf-msg{font-size:13.5px;color:var(--t2);text-align:center;line-height:1.65}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--navy);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(11,25,41,.3);animation:tIn .28s ease;max-width:360px}
+@keyframes tIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.toast-msg{font-size:13.5px;font-weight:500;color:#fff}
+/* EMPTY */
+.empty{text-align:center;padding:56px 20px}.empty-i{font-size:38px;opacity:.25;margin-bottom:10px}.empty-t{font-size:13px;color:var(--t3)}
+/* USER CARDS */
+.ug{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.uc{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:22px;box-shadow:var(--s1);display:flex;flex-direction:column;gap:16px;transition:box-shadow .2s}.uc:hover{box-shadow:var(--s2)}
+.uc-top{display:flex;align-items:center;gap:14px}
+.uc-av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
+.uc-name{font-weight:700;font-size:15px;color:var(--text)}.uc-user{font-size:12px;color:var(--t3);margin-top:2px}
+.uc-info{display:flex;flex-wrap:wrap;gap:8px}.uc-actions{display:flex;gap:8px}
+/* BODY CHART */
+.body-chart-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.body-chart-svg{cursor:crosshair;border-radius:12px;background:var(--bg);border:1.5px solid var(--border)}
+.body-chart-svg .zone{fill:transparent;stroke:none;cursor:pointer;transition:fill .15s}
+.body-chart-svg .zone:hover{fill:rgba(29,110,245,.15)}
+.body-chart-svg .zone.selected{fill:rgba(220,38,38,.25)}
+.body-chart-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+/* REPORT */
+.stat-rg{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.rc{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;box-shadow:var(--s1)}
+.rc-title{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px}
+.rc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}.rc-row:last-child{border-bottom:none}
+.rc-key{color:var(--t2)}.rc-val{font-weight:700;color:var(--text)}
+.bar-item{margin-bottom:10px}.bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--t2);margin-bottom:4px}
+.bar-track{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden}.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .6s ease}
+/* RGPD MODAL */
+.rgpd-box{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r);padding:18px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:20px}
+.rgpd-title{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#92400e;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+/* TIME GRID */
+.tgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.tbox{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.tbox-lbl{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+/* INFO BOX */
+.info-box{background:#eff6ff;border:1px solid rgba(29,110,245,.2);border-radius:var(--r);padding:12px 16px;font-size:13px;color:#1e40af;display:flex;align-items:flex-start;gap:10px;margin-bottom:18px}
+/* MAINT CHIP */
+.maint-chip{display:inline-flex;align-items:center;gap:6px;background:var(--orange-lt);color:var(--orange);border:1px solid rgba(234,88,12,.2);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600}
+@media(max-width:1100px){.sg{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.sb{display:none}.main{margin-left:0}.page{padding:20px 16px}.topbar{padding:0 16px}.fgrid{grid-template-columns:1fr}}
+@media(max-width:480px){.sg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lgl">
+    <div class="lg-brand"><div class="lg-bi">🌊</div><div><div class="lg-bn">Guadalpark</div><div class="lg-bs">Sevilla · España</div></div></div>
+    <div class="lg-hl">Sistema de gestión <em>sanitaria</em> profesional</div>
+    <p class="lg-desc">Plataforma integral para la gestión médica, socorrismo y mantenimiento del parque.</p>
+    <div class="lg-feats">
+      <div class="lg-feat"><div class="lg-fd">🏥</div><span>Registro de asistencias médicas con CNP</span></div>
+      <div class="lg-feat"><div class="lg-fd">🔧</div><span>Gestión de incidencias de mantenimiento</span></div>
+      <div class="lg-feat"><div class="lg-fd">🏊</div><span>Intervenciones del Dpto. de Socorrismo</span></div>
+      <div class="lg-feat"><div class="lg-fd">🔒</div><span>Protección de datos conforme al RGPD</span></div>
+    </div>
+  </div>
+  <div class="lgr">
+    <div class="lgr-inner">
+      <div class="lgr-eye">Acceso seguro</div>
+      <div class="lgr-title">Bienvenido de nuevo</div>
+      <div class="lgr-sub">Introduce tus credenciales para acceder</div>
+      <div class="fg"><label class="fl">Usuario</label><div class="fi-w"><span class="fi-ic">👤</span><input class="fi" type="text" id="lgU" placeholder="Nombre de usuario" autocomplete="username"></div></div>
+      <div class="fg"><label class="fl">Contraseña</label><div class="fi-w"><span class="fi-ic">🔒</span><input class="fi" type="password" id="lgP" placeholder="••••••••" autocomplete="current-password"></div></div>
+      <button class="lg-btn" onclick="doLogin()">Iniciar sesión →</button>
+      <div class="lg-err" id="lgErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app"><div class="aw">
+<aside class="sb">
+  <div class="sb-hd"><div class="sb-logo"><div class="sb-li">🌊</div><div><div class="sb-ln">Guadalpark</div><div class="sb-ls">Leisure Park</div></div></div></div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Principal</div>
+    <button class="si active" id="nav-dashboard" onclick="goV('dashboard',this)"><span class="sic">🏠</span>Panel de inicio</button>
+    <button class="si" id="nav-nueva" onclick="goV('nueva',this)"><span class="sic">➕</span>Nueva asistencia</button>
+    <div class="sb-sec" style="margin-top:6px">Registros</div>
+    <button class="si" id="nav-consultas" onclick="goV('consultas',this)"><span class="sic">🗂️</span>Expedientes médicos<span class="sb-badge" id="navBadge" style="background:var(--blue)">0</span></button>
+    <div id="navMaintBtn"><button class="si" id="nav-maint" onclick="goV('maint',this)"><span class="sic">🔧</span>Mantenimiento<span class="sb-badge" id="navMaintB" style="background:var(--orange)">0</span></button></div>
+    <div id="navSoccBtn" style="display:none"><div class="sb-sec" style="margin-top:6px">Socorrismo</div><button class="si" id="nav-socc" onclick="goV('socc',this)"><span class="sic">🏊</span>Intervenciones</button></div>
+    <div id="navAdminBtn" style="display:none"><div class="sb-sec" style="margin-top:6px">Administración</div>
+      <button class="si" id="nav-informes" onclick="goV('informes',this)"><span class="sic">📊</span>Informes estadísticos</button>
+      <button class="si" id="nav-usuarios" onclick="goV('usuarios',this)"><span class="sic">👥</span>Gestión de usuarios</button>
+    </div>
+    <div class="sb-sec" style="margin-top:6px">Mi cuenta</div>
+    <button class="si" id="nav-mipass" onclick="goV('mipass',this)"><span class="sic">🔑</span>Cambiar contraseña</button>
+  </nav>
+  <div class="sb-ft"><div class="sb-user"><div class="sb-av" id="sbAv"></div><div class="sb-ui"><div class="sb-un" id="sbNm"></div><div class="sb-ur" id="sbRl"></div></div><button class="sb-lo" onclick="doLogout()" title="Cerrar sesión">⏻</button></div></div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div><div class="tb-title" id="tbT">Panel de inicio</div><div class="tb-sub" id="tbS">Resumen de actividad</div></div>
+    <div class="tb-r"><div class="tb-chip" id="tbDate"></div></div>
+  </div>
+  <div class="page">
+
+    <!-- PANEL DE INICIO -->
+    <div class="view active" id="view-dashboard">
+      <div class="sg" id="dashStats"></div>
+      <div class="card">
+        <div class="card-hd"><div><div class="card-ht">Últimas asistencias médicas</div><div class="card-hs">10 registros más recientes</div></div>
+          <button class="btn btn-p" onclick="goV('nueva',el('nav-nueva'))">+ Nueva asistencia</button></div>
+        <div class="tw"><table><thead><tr><th>Paciente</th><th>Fecha/Hora</th><th>Tipo</th><th>Gravedad</th><th>Personal</th><th>Mant.</th><th></th></tr></thead><tbody id="dashTb"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- NUEVA ASISTENCIA -->
+    <div class="view" id="view-nueva">
+      <div class="ph"><div><div class="ph-title">Nueva asistencia médica</div><div class="ph-sub">Los campos marcados con * son obligatorios</div></div></div>
+      <div class="fc">
+        <div class="fs-sec"><div class="fs-title">Datos del paciente</div>
+          <div class="fgrid">
+            <div class="fg"><label class="fl">Nombre completo *</label><input class="fi ni" type="text" id="fNom" placeholder="Nombre y apellidos"><div class="ferr" id="eNom">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Edad *</label><input class="fi ni" type="number" id="fEdad" placeholder="Años" min="0" max="120"><div class="ferr" id="eEdad">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Sexo *</label><select class="fs" id="fSexo"><option value="">— Seleccionar —</option><option>Masculino</option><option>Femenino</option><option>Otro</option></select><div class="ferr" id="eSexo">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Localización de origen</label><input class="fi ni" type="text" id="fOrig" placeholder="Ciudad / País"></div>
+          </div>
+        </div>
+        <div class="fs-sec"><div class="fs-title">Datos de la asistencia</div>
+          <div class="fgrid">
+            <div class="fg"><label class="fl">Fecha *</label><input class="fi ni" type="date" id="fFecha"><div class="ferr" id="eFecha">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Hora *</label><input class="fi ni" type="time" id="fHora"><div class="ferr" id="eHora">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Tipo de asistencia *</label>
+              <select class="fs" id="fTipo" onchange="onTipoChange()">
+                <option value="">— Seleccionar —</option>
+                <option>Traumatología</option><option>Herida / Laceración</option><option>Golpe de calor</option>
+                <option>Ahogamiento / Incidente acuático</option><option>Reacción alérgica</option>
+                <option>Mareo / Desmayo</option><option>Dolor abdominal</option><option>Cuerpo extraño (oídos/ojos)</option>
+                <option>Quemadura solar</option><option>Picadura</option>
+                <option value="accidente_instalacion">Accidente en instalación del parque</option>
+                <option value="otros">Otros</option>
+              </select><div class="ferr" id="eTipo">Campo obligatorio</div></div>
+            <div class="fg"><label class="fl">Gravedad *</label><select class="fs" id="fGrav"><option value="">— Seleccionar —</option><option>Leve</option><option>Moderado</option><option>Grave</option></select><div class="ferr" id="eGrav">Campo obligatorio</div></div>
+            <div class="fg full" id="fOtrosW" style="display:none"><label class="fl">Especifica el tipo *</label><input class="fi ni" type="text" id="fOtros" placeholder="Describe el tipo de asistencia..."><div class="ferr" id="eOtros">Campo obligatorio</div></div>
+            <div class="fg full"><label class="fl">Zona del parque <span id="zonaObl"></span></label>
+              <select class="fs" id="fZona"><option value="">— Seleccionar —</option><option>Zona Infantil</option><option>Piscina de Olas</option><option>Toboganes</option><option>Río Lento</option><option>Playa Artificial</option><option>Zona de Restauración</option><option>Acceso / Taquillas</option><option>Otras</option></select>
+              <div class="ferr" id="eZona">Obligatorio para accidentes en instalaciones</div></div>
+          </div>
+        </div>
+        <div class="fs-sec"><div class="fs-title">Información clínica</div>
+          <div class="fgrid">
+            <div class="fg full"><label class="fl">Motivo / Descripción *</label><textarea class="ft" id="fMot" placeholder="Describe el incidente y motivo de consulta..."></textarea><div class="ferr" id="eMot">Campo obligatorio</div></div>
+            <div class="fg full"><label class="fl">Tratamiento realizado</label><textarea class="ft" id="fTrat" placeholder="Tratamiento aplicado, medicación, curas..."></textarea></div>
+            <div class="fg"><label class="fl">Derivación / Traslado</label><select class="fs" id="fDeriv"><option value="">— Ninguna —</option><option>Hospital (ambulancia)</option><option>Urgencias por medios propios</option><option>Centro de salud</option></select></div>
+            <div class="fg full"><label class="fl">Observaciones</label><textarea class="ft" id="fObs" placeholder="Alergias, notas adicionales..." style="min-height:66px"></textarea></div>
+          </div>
+        </div>
+        <div class="fs-sec"><div class="fs-title">Personal sanitario</div>
+          <div class="info-box">ℹ️ El responsable del registro se asigna automáticamente. Puedes añadir otros miembros del equipo.</div>
+          <div class="fgrid">
+            <div class="fg"><label class="fl">Responsable del registro</label><input class="fi ni" type="text" id="fPers1" disabled><div class="fnote">Asignado automáticamente</div></div>
+            <div class="fg"><label class="fl">Otro personal (opcional)</label><input class="fi ni" type="text" id="fPers2" placeholder="Nombre de otro sanitario presente"></div>
+          </div>
+        </div>
+        <div class="fs-sec"><div class="fs-title">Verificación profesional</div>
+          <div class="fgrid">
+            <div class="fg"><label class="fl">CNP — Código Numérico Profesional *</label><input class="fi ni" type="text" id="fCNP" placeholder="Ej: 12345678A" maxlength="20"><div class="ferr" id="eCNP">El CNP es obligatorio para guardar la asistencia</div><div class="fnote">Quedará registrado en el expediente como firma profesional</div></div>
+          </div>
+        </div>
+        <div class="fs-sec"><div class="fs-title">Reporte de mantenimiento</div>
+          <div class="fgrid">
+            <div class="fg"><label class="fl">¿Hay defecto o desperfecto en el parque?</label><select class="fs" id="fMaint" onchange="onMaintChange()"><option value="no">No</option><option value="si">Sí — Reportar incidencia</option></select></div>
+            <div class="fg full" id="fMaintDW" style="display:none"><label class="fl">Descripción del desperfecto *</label><textarea class="ft" id="fMaintD" placeholder="Describe el defecto o desperfecto detectado..." style="min-height:66px"></textarea><div class="ferr" id="eMaintD">Describe el desperfecto</div></div>
+          </div>
+        </div>
+        <div class="ff"><button class="btn btn-g" onclick="resetForm()">Limpiar</button><button class="btn btn-p" onclick="saveAsistencia()">Guardar asistencia</button></div>
+      </div>
+    </div>
+
+    <!-- CONSULTAS -->
+    <div class="view" id="view-consultas">
+      <div class="ph"><div><div class="ph-title">Expedientes médicos</div><div class="ph-sub">Historial completo de asistencias sanitarias</div></div></div>
+      <div class="filters">
+        <div class="fc-col"><span class="fc-lbl">Paciente</span><input class="fi2" type="text" id="filtNom" placeholder="Buscar por nombre…"></div>
+        <div class="fc-col"><span class="fc-lbl">Fecha</span><input class="fi2" type="date" id="filtFech"></div>
+        <div class="fc-col" style="max-width:150px"><span class="fc-lbl">Gravedad</span><select class="fs2" id="filtGrav"><option value="">Todas</option><option>Leve</option><option>Moderado</option><option>Grave</option></select></div>
+        <button class="btn btn-p" onclick="filterRecs()" style="align-self:flex-end">Filtrar</button>
+        <button class="btn btn-g" onclick="clearFilters()" style="align-self:flex-end">Limpiar</button>
+      </div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Exp.</th><th>Paciente</th><th>Edad</th><th>Fecha/Hora</th><th>Tipo</th><th>Zona</th><th>Gravedad</th><th>Personal/CNP</th><th>Mant.</th><th></th></tr></thead>
+        <tbody id="consultasTb"></tbody>
+      </table></div></div>
+    </div>
+
+    <!-- MANTENIMIENTO -->
+    <div class="view" id="view-maint">
+      <div class="ph">
+        <div><div class="ph-title">Incidencias de mantenimiento</div><div class="ph-sub">Defectos y desperfectos ordenados por prioridad</div></div>
+        <button class="btn btn-o" onclick="openNewMaintModal()">+ Nueva incidencia</button>
+      </div>
+      <div class="filters">
+        <div class="fc-col"><span class="fc-lbl">Fecha</span><input class="fi2" type="date" id="filtMFech"></div>
+        <div class="fc-col" style="max-width:160px"><span class="fc-lbl">Prioridad</span><select class="fs2" id="filtMPrio"><option value="">Todas</option><option value="critica">Crítica</option><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
+        <div class="fc-col" style="max-width:160px"><span class="fc-lbl">Estado</span><select class="fs2" id="filtMEst"><option value="">Todos</option><option value="pendiente">Pendiente</option><option value="en_proceso">En proceso</option><option value="resuelto">Resuelto</option></select></div>
+        <button class="btn btn-p" onclick="filterMaint()" style="align-self:flex-end">Filtrar</button>
+        <button class="btn btn-g" onclick="clearMaintF()" style="align-self:flex-end">Limpiar</button>
+      </div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Nº</th><th>Fecha</th><th>Zona</th><th>Descripción</th><th>Creada por</th><th>Prioridad</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="maintTb"></tbody>
+      </table></div></div>
+    </div>
+
+    <!-- SOCORRISMO -->
+    <div class="view" id="view-socc">
+      <div class="ph"><div><div class="ph-title">Intervenciones de Socorrismo</div><div class="ph-sub">Registro de intervenciones del equipo</div></div><button class="btn btn-p" onclick="openSoccModal()">+ Nueva intervención</button></div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Nº</th><th>Fecha/Hora</th><th>Tipo</th><th>Código</th><th>Ubicación</th><th>Socorrista</th><th></th></tr></thead>
+        <tbody id="soccTb"></tbody>
+      </table></div></div>
+    </div>
+
+    <!-- INFORMES -->
+    <div class="view" id="view-informes">
+      <div class="ph"><div><div class="ph-title">Informes estadísticos</div><div class="ph-sub">Análisis y métricas del sistema</div></div>
+        <button class="btn btn-p" onclick="preExportInforme()">📄 Exportar PDF</button></div>
+      <div id="reportContent"></div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div class="view" id="view-usuarios">
+      <div class="ph"><div><div class="ph-title">Gestión de usuarios</div><div class="ph-sub">Crea, edita y administra cuentas del personal</div></div><button class="btn btn-p" onclick="openUserModal()">+ Nuevo usuario</button></div>
+      <div class="ug" id="usersGrid"></div>
+    </div>
+
+    <!-- CAMBIAR CONTRASEÑA -->
+    <div class="view" id="view-mipass">
+      <div class="ph"><div><div class="ph-title">Cambiar contraseña</div><div class="ph-sub">Actualiza tu contraseña de acceso</div></div></div>
+      <div class="fc" style="max-width:480px">
+        <div class="fs-sec"><div class="fs-title">Nueva contraseña</div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="fg"><label class="fl">Contraseña actual *</label><input class="fi ni" type="password" id="cpActual" placeholder="Tu contraseña actual"></div>
+            <div class="fg"><label class="fl">Nueva contraseña *</label><input class="fi ni" type="password" id="cpNueva" placeholder="Mínimo 6 caracteres"></div>
+            <div class="fg"><label class="fl">Confirmar nueva contraseña *</label><input class="fi ni" type="password" id="cpConfirm" placeholder="Repite la nueva contraseña"></div>
+          </div>
+          <div id="cpErr" style="color:var(--red);font-size:12px;margin-top:10px;font-weight:500;min-height:16px"></div>
+        </div>
+        <div class="ff"><button class="btn btn-p" onclick="changePassword()">Actualizar contraseña</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div></div><!-- /aw /app -->
+
+<!-- MODAL DETALLE ASISTENCIA -->
+<div class="ov" id="ovDetail" onclick="closeOv('ovDetail',event)">
+  <div class="modal">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:#eff6ff">🏥</div><div><div class="mhd-title">Detalle de asistencia</div><div class="mhd-sub" id="detSub"></div></div></div>
+      <div class="mhd-r"><button class="btn btn-g" style="font-size:12px;padding:7px 13px" onclick="preExportPdf()">📄 PDF</button><button id="btnDelModal" class="btn btn-d" style="display:none;font-size:12px;padding:7px 13px" onclick="deleteFromModal()">🗑 Eliminar</button><button class="bti" onclick="closeOvD('ovDetail')">✕</button></div></div>
+    <div class="mbody" id="detBody"></div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovDetail')">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAR -->
+<div class="ov" id="ovConfirm">
+  <div class="modal sm">
+    <div class="mbody" style="padding:32px 28px;text-align:center"><div class="conf-ic" style="background:var(--red-lt)">🗑️</div><div class="conf-title">Eliminar registro</div><p class="conf-msg" id="confMsg" style="margin-top:8px"></p></div>
+    <div class="mft" style="justify-content:center;gap:12px"><button class="btn btn-g" style="min-width:110px" onclick="confCancel()">Cancelar</button><button class="btn btn-d" style="min-width:110px" onclick="confDelete()">Sí, eliminar</button></div>
+  </div>
+</div>
+
+<!-- MODAL RGPD -->
+<div class="ov" id="ovRgpd">
+  <div class="modal md">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:#fffbeb">⚖️</div><div><div class="mhd-title">Aviso de protección de datos</div><div class="mhd-sub">RGPD — Reglamento (UE) 2016/679</div></div></div><button class="bti" onclick="closeOvD('ovRgpd')">✕</button></div>
+    <div class="mbody">
+      <div class="rgpd-box"><div class="rgpd-title">⚠️ Aviso importante antes de generar el documento</div>
+        Está a punto de generar o imprimir un documento que contiene datos personales y de salud, considerados de carácter especialmente protegido conforme al Reglamento (UE) 2016/679 (RGPD).<br><br>
+        El tratamiento de esta información debe limitarse exclusivamente a la gestión de la asistencia sanitaria prestada, quedando prohibido su uso para fines distintos.<br><br>
+        Recuerde que está obligado a garantizar la <strong>confidencialidad, integridad y seguridad</strong> de los datos, evitando accesos no autorizados, difusión indebida o conservación innecesaria.<br><br>
+        <strong>El uso indebido de esta información puede dar lugar a responsabilidades legales.</strong>
+      </div>
+      <div class="fg"><label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--t2)"><input type="checkbox" id="rgpdCheck" style="margin-top:3px;width:16px;height:16px;accent-color:var(--blue)"> He leído y acepto las condiciones de uso y protección de datos indicadas</label></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovRgpd')">Cancelar</button><button class="btn btn-p" id="btnRgpdOk" onclick="doExportAfterRgpd()" disabled>Generar documento</button></div>
+  </div>
+</div>
+
+<!-- MODAL MANTENIMIENTO NUEVA/EDITAR -->
+<div class="ov" id="ovMaintForm" onclick="closeOv('ovMaintForm',event)">
+  <div class="modal md">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:var(--orange-lt)">🔧</div><div><div class="mhd-title" id="maintFormTitle">Nueva incidencia</div><div class="mhd-sub">Incidencia de mantenimiento</div></div></div><button class="bti" onclick="closeOvD('ovMaintForm')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid" style="gap:16px">
+        <div class="fg full"><label class="fl">Descripción del desperfecto *</label><textarea class="ft" id="mfDesc" placeholder="Describe el defecto o desperfecto detectado..."></textarea></div>
+        <div class="fg"><label class="fl">Zona del parque *</label><select class="fs" id="mfZona"><option value="">— Seleccionar —</option><option>Zona Infantil</option><option>Piscina de Olas</option><option>Toboganes</option><option>Río Lento</option><option>Playa Artificial</option><option>Zona de Restauración</option><option>Acceso / Taquillas</option><option>Otras</option></select></div>
+        <div class="fg" id="mfPrioWrap"><label class="fl">Prioridad</label><select class="fs" id="mfPrio"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option><option value="critica">Crítica</option></select></div>
+        <div class="fg"><label class="fl">Creado por</label><input class="fi ni" type="text" id="mfCreador" disabled></div>
+      </div>
+      <div id="mfErr" style="color:var(--red);font-size:12px;margin-top:8px;font-weight:500;min-height:16px"></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovMaintForm')">Cancelar</button><button class="btn btn-p" onclick="saveMaint()">Guardar incidencia</button></div>
+  </div>
+</div>
+
+<!-- MODAL MANTENIMIENTO DETALLE -->
+<div class="ov" id="ovMaintDetail" onclick="closeOv('ovMaintDetail',event)">
+  <div class="modal md">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:var(--orange-lt)">🔧</div><div><div class="mhd-title">Incidencia de mantenimiento</div><div class="mhd-sub" id="maintDetSub"></div></div></div>
+      <div class="mhd-r" id="maintDetActions"></div></div>
+    <div class="mbody" id="maintDetBody"></div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovMaintDetail')">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL SOCORRISMO -->
+<div class="ov" id="ovSocc" onclick="closeOv('ovSocc',event)">
+  <div class="modal" style="max-width:680px">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:var(--cyan-lt)">🏊</div><div><div class="mhd-title" id="soccMT">Nueva intervención</div><div class="mhd-sub">Dpto. de Socorrismo</div></div></div><button class="bti" onclick="closeOvD('ovSocc')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid" style="gap:16px">
+        <div class="fg"><label class="fl">Fecha *</label><input class="fi ni" type="date" id="sF"></div>
+        <div class="fg"><label class="fl">Hora *</label><input class="fi ni" type="time" id="sH"></div>
+        <div class="fg"><label class="fl">Tipo de intervención *</label><select class="fs" id="sTipo"><option value="">— Seleccionar —</option><option>Rescate acuático</option><option>Intervención preventiva</option><option>Asistencia en tobogán</option><option>Control de aforo</option><option>Evacuación</option><option>Apoyo a servicio médico</option><option>Otras</option></select></div>
+        <div class="fg"><label class="fl">Código de gravedad *</label><select class="fs" id="sCod"><option value="">— Seleccionar —</option><option value="Verde">🟢 Verde</option><option value="Amarillo">🟡 Amarillo</option><option value="Rojo">🔴 Rojo</option><option value="Negro">⚫ Negro</option></select></div>
+        <div class="fg"><label class="fl">Ubicación *</label><input class="fi ni" type="text" id="sUbi" placeholder="Zona / instalación"></div>
+        <div class="fg"><label class="fl">Socorrista responsable</label><input class="fi ni" type="text" id="sSocc" disabled><div class="fnote">Asignado automáticamente</div></div>
+        <div class="fg full"><label class="fl">Equipo interviniente</label><input class="fi ni" type="text" id="sEquipo" placeholder="Nombres de socorristas participantes (separados por coma)"></div>
+        <div class="fg full"><label class="fl">Descripción de lo ocurrido *</label><textarea class="ft" id="sDesc" placeholder="Describe el incidente o intervención..."></textarea></div>
+        <div class="fg full"><label class="fl">Material utilizado</label><textarea class="ft" id="sMat" placeholder="Material o equipamiento usado..." style="min-height:66px"></textarea></div>
+        <!-- BODY CHART -->
+        <div class="fg full">
+          <label class="fl" style="margin-bottom:12px">Área de afectación corporal <span style="color:var(--t3);font-weight:400">(haz clic en la zona afectada)</span></label>
+          <div class="body-chart-wrap">
+            <svg id="bodyChartSvg" class="body-chart-svg" viewBox="0 0 200 360" width="200" height="360">
+              <!-- Head --><ellipse class="zone" id="bz-cabeza" cx="100" cy="30" rx="28" ry="28" data-label="Cabeza"/>
+              <!-- Neck --><rect class="zone" id="bz-cuello" x="88" y="56" width="24" height="18" rx="4" data-label="Cuello"/>
+              <!-- Torso --><rect class="zone" id="bz-torso" x="62" y="74" width="76" height="90" rx="8" data-label="Tronco"/>
+              <!-- L arm upper --><rect class="zone" id="bz-brazo-iz" x="30" y="78" width="30" height="52" rx="8" data-label="Brazo izq."/>
+              <!-- R arm upper --><rect class="zone" id="bz-brazo-de" x="140" y="78" width="30" height="52" rx="8" data-label="Brazo der."/>
+              <!-- L forearm --><rect class="zone" id="bz-antbrazo-iz" x="22" y="134" width="28" height="44" rx="6" data-label="Antebrazo izq."/>
+              <!-- R forearm --><rect class="zone" id="bz-antbrazo-de" x="150" y="134" width="28" height="44" rx="6" data-label="Antebrazo der."/>
+              <!-- L hand --><ellipse class="zone" id="bz-mano-iz" cx="36" cy="192" rx="14" ry="10" data-label="Mano izq."/>
+              <!-- R hand --><ellipse class="zone" id="bz-mano-de" cx="164" cy="192" rx="14" ry="10" data-label="Mano der."/>
+              <!-- Pelvis --><rect class="zone" id="bz-cadera" x="62" y="164" width="76" height="38" rx="6" data-label="Cadera/Pelvis"/>
+              <!-- L thigh --><rect class="zone" id="bz-muslo-iz" x="64" y="204" width="32" height="58" rx="8" data-label="Muslo izq."/>
+              <!-- R thigh --><rect class="zone" id="bz-muslo-de" x="104" y="204" width="32" height="58" rx="8" data-label="Muslo der."/>
+              <!-- L shin --><rect class="zone" id="bz-pierna-iz" x="66" y="265" width="28" height="52" rx="6" data-label="Pierna izq."/>
+              <!-- R shin --><rect class="zone" id="bz-pierna-de" x="106" y="265" width="28" height="52" rx="6" data-label="Pierna der."/>
+              <!-- L foot --><ellipse class="zone" id="bz-pie-iz" cx="80" cy="328" rx="18" ry="10" data-label="Pie izq."/>
+              <!-- R foot --><ellipse class="zone" id="bz-pie-de" cx="120" cy="328" rx="18" ry="10" data-label="Pie der."/>
+              <!-- Body outline -->
+              <ellipse cx="100" cy="30" rx="28" ry="28" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="62" y="74" width="76" height="90" rx="8" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="30" y="78" width="30" height="52" rx="8" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="140" y="78" width="30" height="52" rx="8" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="62" y="164" width="76" height="38" rx="6" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="64" y="204" width="32" height="58" rx="8" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+              <rect x="104" y="204" width="32" height="58" rx="8" fill="none" stroke="#c8d2e0" stroke-width="1.5"/>
+            </svg>
+            <div class="body-chart-legend" id="bodyLegend"><span style="font-size:12px;color:var(--t3)">Ninguna zona seleccionada</span></div>
+          </div>
+        </div>
+        <!-- TIEMPOS -->
+        <div class="fg full"><div class="fs-title" style="margin-bottom:14px;font-size:13px">⏱ Tiempos operativos</div>
+          <div class="tgrid">
+            <div class="tbox"><div class="tbox-lbl">Activación del Código</div><input class="fi ni" type="time" id="sT1" style="text-align:center;font-size:16px;font-weight:700"></div>
+            <div class="tbox"><div class="tbox-lbl">Código Controlado</div><input class="fi ni" type="time" id="sT2" style="text-align:center;font-size:16px;font-weight:700"></div>
+            <div class="tbox"><div class="tbox-lbl">Traslado a Serv. Médico</div><input class="fi ni" type="time" id="sT3" style="text-align:center;font-size:16px;font-weight:700"></div>
+          </div>
+        </div>
+      </div>
+      <div id="sErr" style="color:var(--red);font-size:12px;margin-top:10px;font-weight:500;min-height:16px"></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovSocc')">Cancelar</button><button class="btn btn-p" onclick="saveSocc()">Guardar intervención</button></div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE SOCC -->
+<div class="ov" id="ovSoccDet" onclick="closeOv('ovSoccDet',event)">
+  <div class="modal" style="max-width:620px">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:var(--cyan-lt)">🏊</div><div><div class="mhd-title">Detalle de intervención</div><div class="mhd-sub" id="soccDetSub"></div></div></div>
+      <div class="mhd-r"><button class="btn btn-g" style="font-size:12px;padding:7px 13px" onclick="preExportSocc()">📄 PDF</button><button class="bti" onclick="closeOvD('ovSoccDet')">✕</button></div></div>
+    <div class="mbody" id="soccDetBody"></div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovSoccDet')">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL USUARIO -->
+<div class="ov" id="ovUser" onclick="closeOv('ovUser',event)">
+  <div class="modal md">
+    <div class="mhd"><div class="mhd-l"><div class="mhd-icon" style="background:#eff6ff">👤</div><div><div class="mhd-title" id="uMT">Nuevo usuario</div><div class="mhd-sub">Completa los datos del perfil</div></div></div><button class="bti" onclick="closeOvD('ovUser')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid" style="gap:16px">
+        <div class="fg full"><label class="fl">Nombre completo *</label><input class="fi ni" type="text" id="uNom" placeholder="Nombre y apellidos"></div>
+        <div class="fg"><label class="fl">Usuario (login) *</label><input class="fi ni" type="text" id="uUser" placeholder="nombre_usuario"></div>
+        <div class="fg"><label class="fl">Contraseña *</label><input class="fi ni" type="password" id="uPass" placeholder="Mínimo 6 caracteres"></div>
+        <div class="fg"><label class="fl">Rol</label>
+          <select class="fs" id="uRol"><option value="Médico">Médico</option><option value="Enfermería">Enfermería</option><option value="Auxiliar">Auxiliar</option><option value="Mantenimiento">Mantenimiento</option><option value="Socorrismo">Dpto. de Socorrismo</option><option value="Admin">Administrador</option></select></div>
+        <div class="fg"><label class="fl">Estado</label><select class="fs" id="uEst"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+      </div>
+      <div id="uErr" style="color:var(--red);font-size:12px;margin-top:8px;font-weight:500;min-height:16px"></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="closeOvD('ovUser')">Cancelar</button><button class="btn btn-p" onclick="saveUser()">Guardar usuario</button></div>
+  </div>
+</div>
+<script>
+/* ═══ STATE & DATA ═══ */
+let users=JSON.parse(localStorage.getItem('gp_users')||'null');
+if(!users){users=[
+  {id:1,user:'admin',pass:'admin123',name:'Administrador',role:'Admin',estado:'activo'},
+  {id:2,user:'drlopez',pass:'medico2024',name:'Dr. Carlos López',role:'Médico',estado:'activo'},
+  {id:3,user:'enf_garcia',pass:'enfermeria',name:'Enf. María García',role:'Enfermería',estado:'activo'},
+  {id:4,user:'drperez',pass:'medico2024',name:'Dra. Ana Pérez',role:'Médico',estado:'activo'},
+  {id:5,user:'mant1',pass:'mant2024',name:'Juan Sánchez',role:'Mantenimiento',estado:'activo'},
+  {id:6,user:'socc1',pass:'socc2024',name:'Pedro Ruiz',role:'Socorrismo',estado:'activo'},
+];localStorage.setItem('gp_users',JSON.stringify(users));}
+let nextUID=parseInt(localStorage.getItem('gp_nextUID')||'7');
+let records=JSON.parse(localStorage.getItem('gp_records')||'[]');
+let nextID=parseInt(localStorage.getItem('gp_nextID')||'1');
+let maintRecs=JSON.parse(localStorage.getItem('gp_maint')||'[]');
+let nextMID=parseInt(localStorage.getItem('gp_nextMID')||'1');
+let soccRecs=JSON.parse(localStorage.getItem('gp_socc')||'[]');
+let nextSID=parseInt(localStorage.getItem('gp_nextSID')||'1');
+
+let curUser=null,curDetID=null,pendDelID=null,editUID=null,editMID=null,curSoccID=null;
+let rgpdCallback=null;
+let selectedZones=[];
+
+function saveAll(){
+  localStorage.setItem('gp_records',JSON.stringify(records));
+  localStorage.setItem('gp_nextID',String(nextID));
+  localStorage.setItem('gp_users',JSON.stringify(users));
+  localStorage.setItem('gp_nextUID',String(nextUID));
+  localStorage.setItem('gp_maint',JSON.stringify(maintRecs));
+  localStorage.setItem('gp_nextMID',String(nextMID));
+  localStorage.setItem('gp_socc',JSON.stringify(soccRecs));
+  localStorage.setItem('gp_nextSID',String(nextSID));
+}
+
+/* ═══ HELPERS ═══ */
+function el(id){return document.getElementById(id)}
+function v(id){return(el(id)||{value:''}).value}
+function fmt(s){if(!s)return'—';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`}
+function pad(n){return String(n).padStart(2,'0')}
+function setNow(){
+  const n=new Date();
+  const ds=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}`;
+  const ts=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  if(el('fFecha'))el('fFecha').value=ds;if(el('fHora'))el('fHora').value=ts;
+  if(el('sF'))el('sF').value=ds;if(el('sH'))el('sH').value=ts;
+}
+function updateTopbarDate(){el('tbDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function gravBadge(g){
+  if(!g)return'<span style="color:var(--t3)">—</span>';
+  const c=g==='Leve'?'bl':g==='Moderado'?'bm':'bg';
+  return`<span class="badge ${c}">${g}</span>`;
+}
+function prioBadge(p){
+  if(!p)return'—';
+  const c={baja:'p-baja',media:'p-media',alta:'p-alta',critica:'p-critica'}[p]||'p-media';
+  const lbl={baja:'Baja',media:'Media',alta:'Alta',critica:'🚨 Crítica'}[p]||p;
+  return`<span class="badge ${c}">${lbl}</span>`;
+}
+function codBadge(c){
+  if(!c)return'—';
+  const cls={Verde:'cg-verde',Amarillo:'cg-amarillo',Rojo:'cg-rojo',Negro:'cg-negro'}[c]||'';
+  return`<span class="badge ${cls}">${c}</span>`;
+}
+function roleBadge(r){
+  const m={Admin:'badm',Médico:'bmed',Enfermería:'benf',Mantenimiento:'bmant',Socorrismo:'bsocc',Auxiliar:'benf'};
+  return`<span class="badge ${m[r]||'bmed'}">${r}</span>`;
+}
+function prioOrder(p){return{critica:0,alta:1,media:2,baja:3}[p]??4}
+
+/* ═══ AUTH ═══ */
+function doLogin(){
+  const u=v('lgU').trim(),p=v('lgP');
+  const found=users.find(x=>x.user===u&&x.pass===p&&x.estado==='activo');
+  if(!found){el('lgErr').textContent='Usuario o contraseña incorrectos';setTimeout(()=>el('lgErr').textContent='',3000);return;}
+  curUser=found;
+  el('loginScreen').style.display='none';el('app').style.display='block';
+  el('sbAv').textContent=found.name.charAt(0).toUpperCase();
+  el('sbNm').textContent=found.name;el('sbRl').textContent=found.role;
+  const isAdmin=found.role==='Admin',isMaint=found.role==='Mantenimiento',isSocc=found.role==='Socorrismo';
+  el('navAdminBtn').style.display=isAdmin?'block':'none';
+  el('navSoccBtn').style.display=(isAdmin||isSocc)?'block':'none';
+  // Maint visible for admin, maint, socc
+  el('navMaintBtn').style.display=(isAdmin||isMaint||isSocc)?'block':'none';
+  // Hide medical sections for maint-only
+  if(isMaint&&!isAdmin){
+    ['nav-dashboard','nav-nueva','nav-consultas'].forEach(id=>{if(el(id))el(id).style.display='none'});
+    goV('maint',el('nav-maint'));
+  } else if(isSocc&&!isAdmin){
+    ['nav-dashboard','nav-nueva','nav-consultas'].forEach(id=>{if(el(id))el(id).style.display='none'});
+    goV('socc',el('nav-socc'));
+  }
+  // Disable prio editing in maint modal for non-admin/maint
+  el('mfPrioWrap').style.display=(isAdmin||isMaint)?'block':'none';
+  if(el('fPers1'))el('fPers1').value=found.name;
+  if(el('sSocc'))el('sSocc').value=found.name;
+  setNow();updateTopbarDate();updateDashboard();renderConsultas(records);renderMaint();renderSocc();
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&el('loginScreen').style.display!=='none')doLogin();});
+function doLogout(){
+  curUser=null;
+  el('loginScreen').style.display='flex';el('app').style.display='none';
+  el('lgU').value='';el('lgP').value='';
+  ['nav-dashboard','nav-nueva','nav-consultas'].forEach(id=>{if(el(id))el(id).style.display='';});
+}
+
+/* ═══ NAV ═══ */
+const META={
+  dashboard:{t:'Panel de inicio',s:'Resumen de actividad del día'},
+  nueva:{t:'Nueva asistencia',s:'Registra una nueva atención médica'},
+  consultas:{t:'Expedientes médicos',s:'Historial de asistencias sanitarias'},
+  maint:{t:'Incidencias de mantenimiento',s:'Defectos y desperfectos por prioridad'},
+  socc:{t:'Intervenciones de Socorrismo',s:'Registro de intervenciones del equipo'},
+  informes:{t:'Informes estadísticos',s:'Análisis y métricas del sistema'},
+  usuarios:{t:'Gestión de usuarios',s:'Administra cuentas del personal'},
+  mipass:{t:'Cambiar contraseña',s:'Actualiza tu contraseña de acceso'},
+};
+function goV(id,btnEl){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.si').forEach(i=>i.classList.remove('active'));
+  if(el('view-'+id))el('view-'+id).classList.add('active');
+  if(btnEl)btnEl.classList.add('active');
+  const m=META[id]||{t:id,s:''};
+  el('tbT').textContent=m.t;el('tbS').textContent=m.s;
+  if(id==='dashboard')updateDashboard();
+  if(id==='consultas')renderConsultas(records);
+  if(id==='maint')renderMaint();
+  if(id==='socc')renderSocc();
+  if(id==='usuarios')renderUsers();
+  if(id==='informes')renderInformes();
+}
+
+/* ═══ FORM HANDLERS ═══ */
+function onTipoChange(){
+  const t=v('fTipo');
+  el('fOtrosW').style.display=t==='otros'?'block':'none';
+  el('zonaObl').textContent=t==='accidente_instalacion'?'*':'';
+}
+function onMaintChange(){el('fMaintDW').style.display=v('fMaint')==='si'?'block':'none';}
+
+/* ═══ VALIDATION ═══ */
+function clrErr(){document.querySelectorAll('.ferr.show').forEach(e=>e.classList.remove('show'));document.querySelectorAll('.fi.err,.fs.err,.ft.err').forEach(e=>e.classList.remove('err'));}
+function mkErr(fldId,errId){if(el(fldId))el(fldId).classList.add('err');if(el(errId))el(errId).classList.add('show');}
+function validateAsis(){
+  clrErr();let ok=true;
+  if(!v('fNom').trim()){mkErr('fNom','eNom');ok=false;}
+  if(!v('fEdad')){mkErr('fEdad','eEdad');ok=false;}
+  if(!v('fSexo')){mkErr('fSexo','eSexo');ok=false;}
+  if(!v('fFecha')){mkErr('fFecha','eFecha');ok=false;}
+  if(!v('fHora')){mkErr('fHora','eHora');ok=false;}
+  const tipo=v('fTipo');if(!tipo){mkErr('fTipo','eTipo');ok=false;}
+  if(!v('fGrav')){mkErr('fGrav','eGrav');ok=false;}
+  if(tipo==='otros'&&!v('fOtros').trim()){mkErr('fOtros','eOtros');ok=false;}
+  if(tipo==='accidente_instalacion'&&!v('fZona')){mkErr('fZona','eZona');ok=false;}
+  if(!v('fMot').trim()){mkErr('fMot','eMot');ok=false;}
+  if(!v('fCNP').trim()){mkErr('fCNP','eCNP');ok=false;}
+  if(v('fMaint')==='si'&&!v('fMaintD').trim()){mkErr('fMaintD','eMaintD');ok=false;}
+  return ok;
+}
+
+/* ═══ SAVE ASISTENCIA ═══ */
+function saveAsistencia(){
+  if(!validateAsis())return;
+  const tipo=v('fTipo');
+  const tipoD=tipo==='otros'?v('fOtros').trim():tipo==='accidente_instalacion'?'Accidente en instalación del parque':tipo;
+  const personal=[v('fPers1'),v('fPers2').trim()].filter(Boolean).join(' + ');
+  const hasMaint=v('fMaint')==='si';
+  const rec={
+    id:nextID++,nombre:v('fNom').trim(),edad:v('fEdad'),sexo:v('fSexo'),origen:v('fOrig'),
+    fecha:v('fFecha'),hora:v('fHora'),tipo:tipoD,tipoRaw:tipo,
+    gravedad:v('fGrav'),zona:v('fZona'),motivo:v('fMot').trim(),
+    tratamiento:v('fTrat'),derivacion:v('fDeriv'),obs:v('fObs'),
+    personal,cnp:v('fCNP').trim(),
+    maint:hasMaint,maintDesc:hasMaint?v('fMaintD').trim():'',
+    registradoPor:curUser?.name||'',registradoPorUser:curUser?.user||'',
+    ts:new Date().toISOString()
+  };
+  // Auto-create maint incident if reported
+  if(hasMaint){
+    maintRecs.push({
+      id:nextMID++,fecha:v('fFecha'),zona:v('fZona'),desc:v('fMaintD').trim(),
+      creadoPor:curUser?.name||'',creadoPorUser:curUser?.user||'',
+      prioridad:'media',estado:'pendiente',
+      refExpediente:rec.id,ts:new Date().toISOString()
+    });
+  }
+  records.unshift(rec);saveAll();resetForm();
+  el('navBadge').textContent=records.length;
+  el('navMaintB').textContent=maintRecs.filter(m=>m.estado!=='resuelto').length;
+  showToast('✅',`Asistencia de ${rec.nombre} guardada`);
+  updateDashboard();
+}
+
+function resetForm(){
+  ['fNom','fEdad','fOrig','fMot','fTrat','fObs','fOtros','fMaintD','fPers2','fCNP'].forEach(id=>{if(el(id))el(id).value='';});
+  ['fSexo','fTipo','fGrav','fZona','fDeriv'].forEach(id=>{if(el(id))el(id).value='';});
+  if(el('fMaint'))el('fMaint').value='no';
+  if(el('fPers1'))el('fPers1').value=curUser?.name||'';
+  if(el('fOtrosW'))el('fOtrosW').style.display='none';
+  if(el('fMaintDW'))el('fMaintDW').style.display='none';
+  if(el('zonaObl'))el('zonaObl').textContent='';
+  clrErr();setNow();
+}
+
+/* ═══ DASHBOARD ═══ */
+function updateDashboard(){
+  const today=new Date().toISOString().slice(0,10);
+  const total=records.length,hoy=records.filter(r=>r.fecha===today).length;
+  const graves=records.filter(r=>r.gravedad==='Grave').length;
+  const pacs=new Set(records.map(r=>r.nombre.toLowerCase())).size;
+  const mPend=maintRecs.filter(m=>m.estado!=='resuelto').length;
+  el('navBadge').textContent=total;el('navMaintB').textContent=mPend;
+  el('dashStats').innerHTML=`
+    <div class="sc"><div class="sci b">🏥</div><div><div class="sc-n">${total}</div><div class="sc-l">Asistencias totales</div></div></div>
+    <div class="sc"><div class="sci c">📅</div><div><div class="sc-n">${hoy}</div><div class="sc-l">Asistencias hoy</div></div></div>
+    <div class="sc"><div class="sci r">⚠️</div><div><div class="sc-n">${graves}</div><div class="sc-l">Casos graves</div></div></div>
+    <div class="sc"><div class="sci g">👥</div><div><div class="sc-n">${pacs}</div><div class="sc-l">Pacientes distintos</div></div></div>
+    <div class="sc"><div class="sci o">🔧</div><div><div class="sc-n">${mPend}</div><div class="sc-l">Mant. pendientes</div></div></div>
+    <div class="sc"><div class="sci p">🏊</div><div><div class="sc-n">${soccRecs.length}</div><div class="sc-l">Intervenciones socc.</div></div></div>`;
+  const tb=el('dashTb'),last=records.slice(0,10);
+  if(!last.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-i">📋</div><div class="empty-t">Sin registros aún</div></div></td></tr>`;return;}
+  tb.innerHTML=last.map(r=>`<tr>
+    <td><b>${r.nombre}</b></td>
+    <td><span class="tmono">${fmt(r.fecha)} · ${r.hora}</span></td>
+    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tipo}</td>
+    <td>${gravBadge(r.gravedad)}</td>
+    <td class="tmono">${r.personal||'—'}</td>
+    <td>${r.maint?'<span class="badge p-alta" style="font-size:11px">🔧 Sí</span>':'<span style="color:var(--t3);font-size:12px">—</span>'}</td>
+    <td><div style="display:flex;gap:5px"><button class="bti" onclick="showDetail(${r.id})" title="Ver">🔍</button>${curUser?.role==='Admin'?`<button class="bti del" onclick="startDelete(${r.id},'rec')" title="Eliminar">🗑</button>`:''}</div></td>
+  </tr>`).join('');
+}
+
+/* ═══ CONSULTAS ═══ */
+function renderConsultas(data){
+  const tb=el('consultasTb');
+  if(!data.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty"><div class="empty-i">🔍</div><div class="empty-t">Sin registros</div></div></td></tr>`;return;}
+  tb.innerHTML=data.map(r=>`<tr>
+    <td><span class="tmono">#${String(r.id).padStart(4,'0')}</span></td>
+    <td><b>${r.nombre}</b></td><td>${r.edad||'—'}</td>
+    <td><span class="tmono">${fmt(r.fecha)}<br>${r.hora}</span></td>
+    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tipo}</td>
+    <td class="tmono" style="font-size:12px">${r.zona||'—'}</td>
+    <td>${gravBadge(r.gravedad)}</td>
+    <td class="tmono" style="font-size:11px">${r.personal||'—'}<br><span style="color:var(--t3)">${r.cnp?'CNP: '+r.cnp:''}</span></td>
+    <td>${r.maint?'<span class="badge p-alta" style="font-size:11px">🔧</span>':'—'}</td>
+    <td><div style="display:flex;gap:5px"><button class="bti" onclick="showDetail(${r.id})" title="Ver">🔍</button>${curUser?.role==='Admin'?`<button class="bti del" onclick="startDelete(${r.id},'rec')" title="Eliminar">🗑</button>`:''}</div></td>
+  </tr>`).join('');
+}
+function filterRecs(){
+  const nom=v('filtNom').trim().toLowerCase(),fecha=v('filtFech'),grav=v('filtGrav');
+  renderConsultas(records.filter(r=>{
+    if(nom&&!r.nombre.toLowerCase().includes(nom))return false;
+    if(fecha&&r.fecha!==fecha)return false;
+    if(grav&&r.gravedad!==grav)return false;return true;
+  }));
+}
+function clearFilters(){['filtNom','filtFech','filtGrav'].forEach(i=>{if(el(i))el(i).value='';});renderConsultas(records);}
+
+/* ═══ DETAIL MODAL ═══ */
+function showDetail(id){
+  curDetID=id;
+  const r=records.find(x=>x.id===id);if(!r)return;
+  el('detSub').textContent=`Exp. #${String(r.id).padStart(4,'0')} · ${fmt(r.fecha)} a las ${r.hora}`;
+  el('detBody').innerHTML=`
+    <div class="msec"><div class="mslbl">Datos del paciente</div><div class="dg">
+      <div class="di df"><div class="dl">Nombre completo</div><div class="dv">${r.nombre}</div></div>
+      <div class="di"><div class="dl">Edad</div><div class="dv">${r.edad?r.edad+' años':'—'}</div></div>
+      <div class="di"><div class="dl">Sexo</div><div class="dv">${r.sexo||'—'}</div></div>
+      <div class="di"><div class="dl">Origen</div><div class="dv">${r.origen||'—'}</div></div>
+    </div></div>
+    <div class="msec"><div class="mslbl">Datos de la asistencia</div><div class="dg">
+      <div class="di"><div class="dl">Fecha</div><div class="dv">${fmt(r.fecha)}</div></div>
+      <div class="di"><div class="dl">Hora</div><div class="dv">${r.hora}</div></div>
+      <div class="di"><div class="dl">Tipo</div><div class="dv">${r.tipo}</div></div>
+      <div class="di"><div class="dl">Gravedad</div><div class="dv">${gravBadge(r.gravedad)}</div></div>
+      <div class="di"><div class="dl">Zona</div><div class="dv">${r.zona||'—'}</div></div>
+      <div class="di"><div class="dl">Personal sanitario</div><div class="dv">${r.personal||'—'}</div></div>
+    </div></div>
+    <div class="msec"><div class="mslbl">Información clínica</div><div class="dg">
+      <div class="di df"><div class="dl">Motivo</div><div class="dv">${r.motivo}</div></div>
+      <div class="di df"><div class="dl">Tratamiento</div><div class="dv">${r.tratamiento||'—'}</div></div>
+      <div class="di"><div class="dl">Derivación</div><div class="dv">${r.derivacion||'Ninguna'}</div></div>
+      <div class="di df"><div class="dl">Observaciones</div><div class="dv">${r.obs||'—'}</div></div>
+    </div></div>
+    <div class="msec"><div class="mslbl">Verificación profesional</div><div class="dg">
+      <div class="di"><div class="dl">CNP</div><div class="dv" style="font-family:monospace">${r.cnp||'—'}</div></div>
+      <div class="di"><div class="dl">Registrado por</div><div class="dv">${r.registradoPor||'—'}</div></div>
+    </div></div>
+    ${r.maint?`<div class="msec"><div class="mslbl" style="color:var(--orange)">⚠️ Incidencia de mantenimiento asociada</div><div class="dg">
+      <div class="di df"><div class="dl">Descripción</div><div class="dv">${r.maintDesc}</div></div>
+    </div></div>`:''}`;
+  el('btnDelModal').style.display=curUser?.role==='Admin'?'inline-flex':'none';
+  openOv('ovDetail');
+}
+
+/* ═══ DELETE ═══ */
+function startDelete(id,type){
+  pendDelID={id,type};
+  let msg='';
+  if(type==='rec'){const r=records.find(x=>x.id===id);msg=`¿Eliminar la asistencia de "${r?.nombre}" del ${fmt(r?.fecha)}?`;}
+  else if(type==='maint'){const m=maintRecs.find(x=>x.id===id);msg=`¿Eliminar la incidencia de mantenimiento del ${fmt(m?.fecha)}?`;}
+  else if(type==='user'){const u=users.find(x=>x.id===id);msg=`¿Eliminar al usuario "${u?.name}"?`;}
+  el('confMsg').textContent=msg+' Esta acción no se puede deshacer.';
+  openOv('ovConfirm');
+}
+function confDelete(){
+  closeOvD('ovConfirm');
+  if(!pendDelID)return;
+  const {id,type}=pendDelID;
+  if(type==='rec'){records=records.filter(x=>x.id!==id);updateDashboard();renderConsultas(records);}
+  else if(type==='maint'){maintRecs=maintRecs.filter(x=>x.id!==id);renderMaint();}
+  else if(type==='user'){users=users.filter(x=>x.id!==id);renderUsers();}
+  pendDelID=null;saveAll();showToast('🗑','Registro eliminado');
+}
+function confCancel(){closeOvD('ovConfirm');pendDelID=null;}
+function deleteFromModal(){if(curUser?.role!=='Admin')return;closeOvD('ovDetail');startDelete(curDetID,'rec');}
+
+/* ═══ MANTENIMIENTO ═══ */
+let editingMaintID=null;
+function openNewMaintModal(linkedRec){
+  editingMaintID=null;
+  el('maintFormTitle').textContent='Nueva incidencia de mantenimiento';
+  el('mfDesc').value='';el('mfZona').value='';el('mfPrio').value='media';
+  el('mfCreador').value=curUser?.name||'';el('mfErr').textContent='';
+  if(linkedRec){el('mfDesc').value=linkedRec.desc||'';el('mfZona').value=linkedRec.zona||'';}
+  openOv('ovMaintForm');
+}
+function openEditMaintModal(id){
+  const m=maintRecs.find(x=>x.id===id);if(!m)return;
+  editingMaintID=id;
+  el('maintFormTitle').textContent='Editar incidencia';
+  el('mfDesc').value=m.desc;el('mfZona').value=m.zona||'';el('mfPrio').value=m.prioridad||'media';
+  el('mfCreador').value=m.creadoPor||'';el('mfErr').textContent='';
+  openOv('ovMaintForm');
+}
+function saveMaint(){
+  const desc=v('mfDesc').trim(),zona=v('mfZona');
+  if(!desc||!zona){el('mfErr').textContent='Descripción y zona son obligatorias';return;}
+  if(editingMaintID){
+    const i=maintRecs.findIndex(x=>x.id===editingMaintID);
+    if(i!==-1){
+      maintRecs[i].desc=desc;maintRecs[i].zona=zona;
+      if(curUser?.role==='Admin'||curUser?.role==='Mantenimiento')maintRecs[i].prioridad=v('mfPrio');
+    }
+    showToast('✅','Incidencia actualizada');
+  } else {
+    maintRecs.push({
+      id:nextMID++,fecha:new Date().toISOString().slice(0,10),zona,desc,
+      creadoPor:curUser?.name||'',creadoPorUser:curUser?.user||'',
+      prioridad:(curUser?.role==='Admin'||curUser?.role==='Mantenimiento')?v('mfPrio'):'media',
+      estado:'pendiente',ts:new Date().toISOString()
+    });
+    showToast('✅','Incidencia de mantenimiento creada');
+  }
+  saveAll();closeOvD('ovMaintForm');renderMaint();updateDashboard();
+}
+function renderMaint(data){
+  const filtered=data||[...maintRecs].sort((a,b)=>prioOrder(a.prioridad)-prioOrder(b.prioridad));
+  const tb=el('maintTb');
+  if(!filtered.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="empty-i">🔧</div><div class="empty-t">Sin incidencias registradas</div></div></td></tr>`;return;}
+  tb.innerHTML=filtered.map(m=>`<tr>
+    <td><span class="tmono">#${String(m.id).padStart(4,'0')}</span></td>
+    <td><span class="tmono">${fmt(m.fecha)}</span></td>
+    <td>${m.zona||'—'}</td>
+    <td style="max-width:200px">${m.desc}</td>
+    <td class="tmono">${m.creadoPor||'—'}</td>
+    <td>${prioBadge(m.prioridad)}</td>
+    <td><span class="badge ${m.estado==='resuelto'?'badge-ok':m.estado==='en_proceso'?'bm':'bg'}">${m.estado==='resuelto'?'Resuelto':m.estado==='en_proceso'?'En proceso':'Pendiente'}</span></td>
+    <td><div style="display:flex;gap:5px">
+      <button class="bti" onclick="showMaintDet(${m.id})" title="Ver">🔍</button>
+      ${(curUser?.role==='Admin'||curUser?.role==='Mantenimiento')?`<button class="bti edt" onclick="openEditMaintModal(${m.id})" title="Editar">✏️</button>`:''} 
+      ${curUser?.role==='Admin'?`<button class="bti del" onclick="startDelete(${m.id},'maint')">🗑</button>`:''}
+    </div></td>
+  </tr>`).join('');
+}
+function filterMaint(){
+  const fecha=v('filtMFech'),prio=v('filtMPrio'),est=v('filtMEst');
+  let data=[...maintRecs].sort((a,b)=>prioOrder(a.prioridad)-prioOrder(b.prioridad));
+  if(fecha)data=data.filter(m=>m.fecha===fecha);
+  if(prio)data=data.filter(m=>m.prioridad===prio);
+  if(est)data=data.filter(m=>m.estado===est);
+  renderMaint(data);
+}
+function clearMaintF(){['filtMFech','filtMPrio','filtMEst'].forEach(i=>{if(el(i))el(i).value='';});renderMaint();}
+function showMaintDet(id){
+  const m=maintRecs.find(x=>x.id===id);if(!m)return;
+  el('maintDetSub').textContent=`Incidencia #${String(m.id).padStart(4,'0')} · ${fmt(m.fecha)}`;
+  el('maintDetBody').innerHTML=`<div class="msec"><div class="mslbl">Información</div><div class="dg">
+    <div class="di"><div class="dl">Fecha</div><div class="dv">${fmt(m.fecha)}</div></div>
+    <div class="di"><div class="dl">Zona</div><div class="dv">${m.zona||'—'}</div></div>
+    <div class="di"><div class="dl">Prioridad</div><div class="dv">${prioBadge(m.prioridad)}</div></div>
+    <div class="di"><div class="dl">Estado</div><div class="dv"><span class="badge ${m.estado==='resuelto'?'badge-ok':m.estado==='en_proceso'?'bm':'bg'}">${m.estado==='resuelto'?'Resuelto':m.estado==='en_proceso'?'En proceso':'Pendiente'}</span></div></div>
+    <div class="di df"><div class="dl">Descripción</div><div class="dv">${m.desc}</div></div>
+    <div class="di"><div class="dl">Creada por</div><div class="dv">${m.creadoPor||'—'}</div></div>
+  </div></div>`;
+  // Estado change buttons for admin/maint
+  const canEdit=curUser?.role==='Admin'||curUser?.role==='Mantenimiento';
+  el('maintDetActions').innerHTML=canEdit?`
+    <button class="btn btn-g" style="font-size:12px;padding:7px 12px" onclick="setMaintEst(${m.id},'pendiente')">Pendiente</button>
+    <button class="btn btn-amb" style="font-size:12px;padding:7px 12px" onclick="setMaintEst(${m.id},'en_proceso')">En proceso</button>
+    <button class="btn btn-p" style="font-size:12px;padding:7px 12px" onclick="setMaintEst(${m.id},'resuelto')">✓ Resuelto</button>
+    <button class="bti" onclick="closeOvD('ovMaintDetail')">✕</button>`:'<button class="bti" onclick="closeOvD(\'ovMaintDetail\')">✕</button>';
+  openOv('ovMaintDetail');
+}
+function setMaintEst(id,est){
+  const m=maintRecs.find(x=>x.id===id);if(!m)return;
+  m.estado=est;saveAll();showMaintDet(id);renderMaint();updateDashboard();
+  showToast('✅',`Incidencia marcada como ${est.replace('_',' ')}`);
+}
+
+/* ═══ SOCORRISMO / BODY CHART ═══ */
+function initBodyChart(){
+  selectedZones=[];
+  document.querySelectorAll('.zone').forEach(z=>{
+    z.classList.remove('selected');
+    z.addEventListener('click',function(){
+      const lbl=this.getAttribute('data-label');
+      if(this.classList.contains('selected')){
+        this.classList.remove('selected');
+        selectedZones=selectedZones.filter(s=>s!==lbl);
+      } else {
+        this.classList.add('selected');
+        selectedZones.push(lbl);
+      }
+      updateBodyLegend();
+    });
+  });
+  updateBodyLegend();
+}
+function updateBodyLegend(){
+  const leg=el('bodyLegend');
+  if(!selectedZones.length){leg.innerHTML='<span style="font-size:12px;color:var(--t3)">Ninguna zona seleccionada</span>';return;}
+  leg.innerHTML=selectedZones.map(z=>`<span class="badge" style="background:#fee2e2;color:var(--red)">${z}</span>`).join('');
+}
+function openSoccModal(){
+  selectedZones=[];el('sErr').textContent='';
+  ['sDesc','sMat'].forEach(id=>{if(el(id))el(id).value='';});
+  ['sTipo','sCod'].forEach(id=>{if(el(id))el(id).value='';});
+  ['sT1','sT2','sT3'].forEach(id=>{if(el(id))el(id).value='';});
+  if(el('sEquipo'))el('sEquipo').value='';
+  if(el('sSocc'))el('sSocc').value=curUser?.name||'';
+  setNow();initBodyChart();
+  openOv('ovSocc');
+}
+function saveSocc(){
+  const fecha=v('sF'),hora=v('sH'),tipo=v('sTipo'),cod=v('sCod'),ubi=v('sUbi').trim(),desc=v('sDesc').trim();
+  if(!fecha||!hora||!tipo||!cod||!ubi||!desc){el('sErr').textContent='Completa los campos obligatorios (*)';return;}
+  const rec={
+    id:nextSID++,fecha,hora,tipo,codigoGravedad:cod,ubicacion:ubi,descripcion:desc,
+    material:v('sMat'),equipo:v('sEquipo'),zonasAfectadas:selectedZones.join(', '),
+    t1:v('sT1'),t2:v('sT2'),t3:v('sT3'),
+    socorrista:v('sSocc'),registradoPor:curUser?.name||'',ts:new Date().toISOString()
+  };
+  soccRecs.unshift(rec);saveAll();closeOvD('ovSocc');renderSocc();updateDashboard();
+  showToast('✅','Intervención guardada');
+}
+function renderSocc(){
+  const tb=el('soccTb');
+  if(!soccRecs.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-i">🏊</div><div class="empty-t">Sin intervenciones registradas</div></div></td></tr>`;return;}
+  tb.innerHTML=soccRecs.map(r=>`<tr>
+    <td><span class="tmono">#${String(r.id).padStart(3,'0')}</span></td>
+    <td><span class="tmono">${fmt(r.fecha)}<br>${r.hora}</span></td>
+    <td>${r.tipo}</td>
+    <td>${codBadge(r.codigoGravedad)}</td>
+    <td>${r.ubicacion}</td>
+    <td class="tmono">${r.socorrista||'—'}</td>
+    <td><button class="bti" onclick="showSoccDet(${r.id})" title="Ver">🔍</button></td>
+  </tr>`).join('');
+}
+function showSoccDet(id){
+  curSoccID=id;
+  const r=soccRecs.find(x=>x.id===id);if(!r)return;
+  el('soccDetSub').textContent=`Intervención #${String(r.id).padStart(3,'0')} · ${fmt(r.fecha)} ${r.hora}`;
+  el('soccDetBody').innerHTML=`
+    <div class="msec"><div class="mslbl">Datos de la intervención</div><div class="dg">
+      <div class="di"><div class="dl">Fecha</div><div class="dv">${fmt(r.fecha)}</div></div>
+      <div class="di"><div class="dl">Hora</div><div class="dv">${r.hora}</div></div>
+      <div class="di"><div class="dl">Tipo</div><div class="dv">${r.tipo}</div></div>
+      <div class="di"><div class="dl">Código de gravedad</div><div class="dv">${codBadge(r.codigoGravedad)}</div></div>
+      <div class="di"><div class="dl">Ubicación</div><div class="dv">${r.ubicacion}</div></div>
+      <div class="di"><div class="dl">Socorrista responsable</div><div class="dv">${r.socorrista||'—'}</div></div>
+      <div class="di df"><div class="dl">Equipo interviniente</div><div class="dv">${r.equipo||'—'}</div></div>
+      <div class="di df"><div class="dl">Descripción</div><div class="dv">${r.descripcion}</div></div>
+      <div class="di df"><div class="dl">Material utilizado</div><div class="dv">${r.material||'—'}</div></div>
+      <div class="di df"><div class="dl">Zonas corporales afectadas</div><div class="dv">${r.zonasAfectadas||'No indicadas'}</div></div>
+    </div></div>
+    <div class="msec"><div class="mslbl">⏱ Tiempos operativos</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div class="tbox" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center"><div class="tbox-lbl" style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Activación Código</div><div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:700">${r.t1||'—'}</div></div>
+        <div class="tbox" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center"><div class="tbox-lbl" style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Código Controlado</div><div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:700">${r.t2||'—'}</div></div>
+        <div class="tbox" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center"><div class="tbox-lbl" style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Traslado Serv. Médico</div><div style="font-family:Outfit,sans-serif;font-size:18px;font-weight:700">${r.t3||'—'}</div></div>
+      </div>
+    </div>`;
+  openOv('ovSoccDet');
+}
+
+/* ═══ RGPD ═══ */
+function preExportPdf(){rgpdCallback='pdf';showRgpd();}
+function preExportSocc(){rgpdCallback='socc';showRgpd();}
+function preExportInforme(){rgpdCallback='informe';showRgpd();}
+function showRgpd(){
+  el('rgpdCheck').checked=false;el('btnRgpdOk').disabled=true;
+  el('rgpdCheck').onchange=()=>{el('btnRgpdOk').disabled=!el('rgpdCheck').checked;};
+  openOv('ovRgpd');
+}
+function doExportAfterRgpd(){
+  closeOvD('ovRgpd');
+  if(rgpdCallback==='pdf')exportPdf();
+  else if(rgpdCallback==='socc')exportSoccPdf();
+  else if(rgpdCallback==='informe')exportInformePdf();
+  rgpdCallback=null;
+}
+
+/* ═══ EXPORT ASISTENCIA PDF ═══ */
+function exportPdf(){
+  const r=records.find(x=>x.id===curDetID);if(!r)return;
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,mg=18;let y=0;
+  doc.setFillColor(11,25,41);doc.rect(0,0,W,42,'F');doc.setFillColor(29,110,245);doc.rect(0,40,W,2,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(20);doc.setTextColor(255,255,255);doc.text('GUADALPARK',mg,17);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(96,165,250);doc.text('LEISURE PARK · CLÍNICA MÉDICA · SEVILLA',mg,25);
+  doc.setFontSize(8);doc.setTextColor(80,115,160);doc.text('INFORME DE ASISTENCIA',mg,33);
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(96,165,250);doc.text(`N.º ${String(r.id).padStart(4,'0')}`,W-mg,17,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(80,115,160);
+  doc.text(`Emitido: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`,W-mg,25,{align:'right'});
+  y=52;
+  function st(t){doc.setFillColor(238,242,250);doc.rect(mg,y,W-mg*2,7.5,'F');doc.setFillColor(29,110,245);doc.rect(mg,y,3,7.5,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(29,110,245);doc.text(t.toUpperCase(),mg+6,y+5.2);y+=13;}
+  function r2(l1,v1,l2,v2){const hw=(W-mg*2-6)/2;doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(120,145,175);doc.text(l1.toUpperCase(),mg,y);doc.text(l2.toUpperCase(),mg+hw+6,y);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(11,25,41);doc.text(String(v1||'—'),mg,y+5.5);doc.text(String(v2||'—'),mg+hw+6,y+5.5);y+=14;}
+  function rf(lbl,val){const lines=doc.splitTextToSize(String(val||'—'),W-mg*2);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(120,145,175);doc.text(lbl.toUpperCase(),mg,y);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(11,25,41);doc.text(lines,mg,y+5.5);y+=7+lines.length*5.2;}
+  st('Datos del paciente');r2('Nombre completo',r.nombre,'Edad',r.edad?r.edad+' años':'—');r2('Sexo',r.sexo,'Localización',r.origen);
+  st('Datos de la asistencia');r2('Fecha',fmt(r.fecha),'Hora',r.hora);r2('Tipo',r.tipo,'Gravedad',r.gravedad||'—');r2('Zona',r.zona,'Personal',r.personal);
+  st('Información clínica');rf('Motivo',r.motivo);rf('Tratamiento',r.tratamiento);r2('Derivación',r.derivacion||'Ninguna','CNP',r.cnp||'—');
+  if(r.obs)rf('Observaciones',r.obs);
+  if(r.maint){y+=4;st('Incidencia de mantenimiento');rf('Descripción del desperfecto',r.maintDesc);}
+  y=Math.max(y+8,242);doc.setDrawColor(210,220,235);doc.line(mg,y,mg+70,y);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,145,175);doc.text('Firma del personal sanitario',mg,y+5);doc.text(r.personal||'',mg,y+11);
+  doc.setFillColor(11,25,41);doc.rect(0,285,W,12,'F');doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(60,90,130);doc.text('Guadalpark · Leisure Park · Documento generado electrónicamente · Datos protegidos RGPD',W/2,292,{align:'center'});
+  doc.save(`GP_Asistencia_${String(r.id).padStart(4,'0')}_${r.nombre.replace(/\s+/g,'_')}_${r.fecha}.pdf`);
+  showToast('📄','PDF exportado');
+}
+
+/* ═══ EXPORT SOCC PDF ═══ */
+function exportSoccPdf(){
+  const r=soccRecs.find(x=>x.id===curSoccID);if(!r)return;
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,mg=18;let y=0;
+  doc.setFillColor(11,25,41);doc.rect(0,0,W,42,'F');doc.setFillColor(6,182,212);doc.rect(0,40,W,2,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(20);doc.setTextColor(255,255,255);doc.text('GUADALPARK',mg,17);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(103,232,249);doc.text('LEISURE PARK · DPTO. DE SOCORRISMO · SEVILLA',mg,25);
+  doc.setFontSize(8);doc.setTextColor(80,150,170);doc.text('INFORME DE INTERVENCIÓN',mg,33);
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(103,232,249);doc.text(`N.º ${String(r.id).padStart(3,'0')}`,W-mg,17,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(80,150,170);
+  doc.text(`Emitido: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`,W-mg,25,{align:'right'});
+  y=52;
+  function st(t){doc.setFillColor(236,254,255);doc.rect(mg,y,W-mg*2,7.5,'F');doc.setFillColor(6,182,212);doc.rect(mg,y,3,7.5,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(14,116,144);doc.text(t.toUpperCase(),mg+6,y+5.2);y+=13;}
+  function r2(l1,v1,l2,v2){const hw=(W-mg*2-6)/2;doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(120,145,175);doc.text(l1.toUpperCase(),mg,y);doc.text(l2.toUpperCase(),mg+hw+6,y);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(11,25,41);doc.text(String(v1||'—'),mg,y+5.5);doc.text(String(v2||'—'),mg+hw+6,y+5.5);y+=14;}
+  function rf(lbl,val){const lines=doc.splitTextToSize(String(val||'—'),W-mg*2);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(120,145,175);doc.text(lbl.toUpperCase(),mg,y);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(11,25,41);doc.text(lines,mg,y+5.5);y+=7+lines.length*5.2;}
+  st('Datos de la intervención');
+  r2('Fecha',fmt(r.fecha),'Hora',r.hora);r2('Tipo',r.tipo,'Código de gravedad',r.codigoGravedad||'—');
+  r2('Ubicación',r.ubicacion,'Socorrista responsable',r.socorrista);
+  rf('Equipo interviniente',r.equipo);
+  st('Descripción del incidente');rf('Descripción',r.descripcion);rf('Material utilizado',r.material);
+  if(r.zonasAfectadas)rf('Zonas corporales afectadas',r.zonasAfectadas);
+  st('Tiempos operativos');
+  r2('Activación del Código',r.t1||'—','Código Controlado',r.t2||'—');
+  r2('Traslado a Servicio Médico',r.t3||'—','Registrado por',r.registradoPor);
+  doc.setFillColor(11,25,41);doc.rect(0,285,W,12,'F');doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(60,90,130);doc.text('Guadalpark · Leisure Park · Dpto. de Socorrismo · Documento generado electrónicamente',W/2,292,{align:'center'});
+  doc.save(`GP_Intervencion_${String(r.id).padStart(3,'0')}_${r.fecha}.pdf`);
+  showToast('📄','PDF de intervención exportado');
+}
+
+/* ═══ INFORMES ═══ */
+function renderInformes(){
+  const c=el('reportContent');if(!c)return;
+  if(!records.length&&!maintRecs.length&&!soccRecs.length){c.innerHTML=`<div class="empty"><div class="empty-i">📊</div><div class="empty-t">Sin datos para mostrar</div></div>`;return;}
+  const today=new Date().toISOString().slice(0,10);
+  const total=records.length,hoy=records.filter(r=>r.fecha===today).length;
+  const graves=records.filter(r=>r.gravedad==='Grave').length,mods=records.filter(r=>r.gravedad==='Moderado').length,leves=records.filter(r=>r.gravedad==='Leve').length;
+  const tiposMap={};records.forEach(r=>{tiposMap[r.tipo]=(tiposMap[r.tipo]||0)+1;});
+  const topTipos=Object.entries(tiposMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const zonasMap={};records.filter(r=>r.zona).forEach(r=>{zonasMap[r.zona]=(zonasMap[r.zona]||0)+1;});
+  const topZonas=Object.entries(zonasMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const mPend=maintRecs.filter(m=>m.estado!=='resuelto').length;
+  c.innerHTML=`
+  <div class="stat-rg" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:18px">
+    ${[['🏥','Asistencias totales',total,'var(--blue)'],['⚠️','Casos graves',graves,'var(--red)'],['🔧','Mant. pendientes',mPend,'var(--orange)'],['🏊','Intervenciones socc.',soccRecs.length,'var(--cyan)'],['📅','Hoy',hoy,'var(--green)'],['👥','Pacientes distintos',new Set(records.map(r=>r.nombre.toLowerCase())).size,'var(--purple)']].map(([ic,lbl,n,col])=>
+      `<div class="sc"><div class="sci" style="background:${col}22">${ic}</div><div><div class="sc-n">${n}</div><div class="sc-l">${lbl}</div></div></div>`).join('')}
+  </div>
+  <div class="stat-rg">
+    <div class="rc"><div class="rc-title">⚠️ Distribución por gravedad</div>
+      ${[['Graves',graves,'var(--red)'],['Moderados',mods,'var(--amber)'],['Leves',leves,'var(--green)']].map(([l,n,col])=>`<div class="bar-item"><div class="bar-label"><span>${l}</span><span>${n} (${total?Math.round(n/total*100):0}%)</span></div><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(n/total*100):0}%;background:${col}"></div></div></div>`).join('')}
+    </div>
+    <div class="rc"><div class="rc-title">🏥 Tipos de asistencia más frecuentes</div>
+      ${topTipos.map(([t,n])=>`<div class="bar-item"><div class="bar-label"><span style="font-size:12px">${t.slice(0,28)}</span><span>${n}</span></div><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(n/total*100):0}%"></div></div></div>`).join('')}
+    </div>
+    <div class="rc"><div class="rc-title">📍 Incidencias por zona</div>
+      ${topZonas.length?topZonas.map(([z,n])=>`<div class="bar-item"><div class="bar-label"><span>${z}</span><span>${n}</span></div><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(n/total*100):0}%;background:var(--cyan)"></div></div></div>`).join(''):'<p style="color:var(--t3);font-size:13px">Sin datos de zona</p>'}
+    </div>
+    <div class="rc"><div class="rc-title">🔧 Mantenimiento</div>
+      ${[['Total incidencias',maintRecs.length],['Pendientes',maintRecs.filter(m=>m.estado==='pendiente').length],['En proceso',maintRecs.filter(m=>m.estado==='en_proceso').length],['Resueltas',maintRecs.filter(m=>m.estado==='resuelto').length]].map(([k,n])=>`<div class="rc-row"><span class="rc-key">${k}</span><span class="rc-val">${n}</span></div>`).join('')}
+    </div>
+  </div>`;
+}
+function exportInformePdf(){
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,mg=18;let y=0;
+  doc.setFillColor(11,25,41);doc.rect(0,0,W,42,'F');doc.setFillColor(29,110,245);doc.rect(0,40,W,2,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(20);doc.setTextColor(255,255,255);doc.text('GUADALPARK · LEISURE PARK',mg,17);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(96,165,250);doc.text('INFORME ESTADÍSTICO DE ACTIVIDAD',mg,26);
+  doc.setFontSize(8);doc.setTextColor(80,115,160);doc.text(`Generado: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`,W-mg,26,{align:'right'});
+  y=52;
+  const today=new Date().toISOString().slice(0,10);
+  const total=records.length,hoy=records.filter(r=>r.fecha===today).length;
+  const graves=records.filter(r=>r.gravedad==='Grave').length,mods=records.filter(r=>r.gravedad==='Moderado').length,leves=records.filter(r=>r.gravedad==='Leve').length;
+  function sec(t){doc.setFillColor(238,242,250);doc.rect(mg,y,W-mg*2,7.5,'F');doc.setFillColor(29,110,245);doc.rect(mg,y,3,7.5,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(29,110,245);doc.text(t.toUpperCase(),mg+6,y+5.2);y+=13;}
+  function row(l,vl){doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(74,85,104);doc.text(l,mg,y);doc.setFont('helvetica','bold');doc.setTextColor(11,25,41);doc.text(String(vl),W-mg,y,{align:'right'});doc.setDrawColor(220,227,237);doc.line(mg,y+2,W-mg,y+2);y+=9;}
+  sec('Resumen General');row('Total de asistencias médicas',total);row('Hoy',hoy);row('Casos graves',graves);row('Con reporte de mantenimiento',records.filter(r=>r.maint).length);row('Pacientes derivados',records.filter(r=>r.derivacion).length);
+  y+=4;sec('Distribución por Gravedad');row('Graves',`${graves} (${total?Math.round(graves/total*100):0}%)`);row('Moderados',`${mods} (${total?Math.round(mods/total*100):0}%)`);row('Leves',`${leves} (${total?Math.round(leves/total*100):0}%)`);
+  y+=4;sec('Incidencias de Mantenimiento');row('Total',maintRecs.length);row('Pendientes',maintRecs.filter(m=>m.estado==='pendiente').length);row('En proceso',maintRecs.filter(m=>m.estado==='en_proceso').length);row('Resueltas',maintRecs.filter(m=>m.estado==='resuelto').length);
+  y+=4;sec('Intervenciones de Socorrismo');row('Total de intervenciones',soccRecs.length);
+  if(soccRecs.length){const codMap={};soccRecs.forEach(r=>{codMap[r.codigoGravedad]=(codMap[r.codigoGravedad]||0)+1;});Object.entries(codMap).forEach(([c,n])=>row(`  Código ${c}`,n));}
+  const tiposMap={};records.forEach(r=>{tiposMap[r.tipo]=(tiposMap[r.tipo]||0)+1;});
+  y+=4;sec('Tipos de Asistencia (Top 5)');Object.entries(tiposMap).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([t,n])=>row(t.slice(0,40),n));
+  doc.setFillColor(11,25,41);doc.rect(0,285,W,12,'F');doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(60,90,130);doc.text('Guadalpark · Leisure Park · Datos protegidos conforme al RGPD (UE) 2016/679',W/2,292,{align:'center'});
+  doc.save(`GP_Informe_${new Date().toISOString().slice(0,10)}.pdf`);
+  showToast('📄','Informe exportado');
+}
+
+/* ═══ USUARIOS ═══ */
+function renderUsers(){
+  const g=el('usersGrid');if(!g)return;
+  if(!users.length){g.innerHTML=`<div class="empty"><div class="empty-i">👥</div><div class="empty-t">Sin usuarios</div></div>`;return;}
+  g.innerHTML=users.map(u=>`<div class="uc">
+    <div class="uc-top"><div class="uc-av" style="${u.estado==='inactivo'?'opacity:.4;filter:grayscale(1)':''}">${u.name.charAt(0)}</div>
+    <div><div class="uc-name">${u.name}</div><div class="uc-user">@${u.user}</div></div></div>
+    <div class="uc-info">${roleBadge(u.role)}<span class="badge ${u.estado==='activo'?'badge-ok':'badge-off'}">${u.estado==='activo'?'● Activo':'○ Inactivo'}</span>${u.user==='admin'?'<span class="badge" style="background:#fef9c3;color:#854d0e">⭐ Admin</span>':''}</div>
+    <div class="uc-actions"><button class="btn btn-g" style="flex:1;font-size:12px;padding:8px" onclick="openUserModal(${u.id})">✏️ Editar</button>${u.user!=='admin'?`<button class="btn btn-d" style="font-size:12px;padding:8px 12px" onclick="startDelete(${u.id},'user')">🗑</button>`:''}</div>
+  </div>`).join('');
+}
+function openUserModal(id){
+  editUID=id||null;el('uMT').textContent=id?'Editar usuario':'Nuevo usuario';el('uErr').textContent='';
+  if(id){const u=users.find(x=>x.id===id);if(!u)return;el('uNom').value=u.name;el('uUser').value=u.user;el('uPass').value=u.pass;el('uRol').value=u.role;el('uEst').value=u.estado;el('uUser').disabled=u.user==='admin';}
+  else{['uNom','uUser','uPass'].forEach(i=>el(i).value='');el('uRol').value='Médico';el('uEst').value='activo';el('uUser').disabled=false;}
+  openOv('ovUser');
+}
+function saveUser(){
+  const nom=el('uNom').value.trim(),user=el('uUser').value.trim().toLowerCase(),pass=el('uPass').value,role=el('uRol').value,est=el('uEst').value;
+  const err=el('uErr');
+  if(!nom||!user||!pass){err.textContent='Nombre, usuario y contraseña son obligatorios';return;}
+  if(pass.length<6){err.textContent='La contraseña debe tener al menos 6 caracteres';return;}
+  if(users.find(u=>u.user===user&&u.id!==editUID)){err.textContent='Ese nombre de usuario ya existe';return;}
+  if(editUID){const i=users.findIndex(u=>u.id===editUID);if(i!==-1)users[i]={...users[i],name:nom,user,pass,role,estado:est};showToast('✅',`Usuario ${nom} actualizado`);}
+  else{users.push({id:nextUID++,name:nom,user,pass,role,estado:est});showToast('✅',`Usuario ${nom} creado`);}
+  saveAll();closeOvD('ovUser');renderUsers();
+}
+
+/* ═══ CAMBIAR CONTRASEÑA ═══ */
+function changePassword(){
+  const actual=v('cpActual'),nueva=v('cpNueva'),confirm=v('cpConfirm');
+  const err=el('cpErr');
+  if(!actual||!nueva||!confirm){err.textContent='Completa todos los campos';return;}
+  if(actual!==curUser.pass){err.textContent='La contraseña actual no es correcta';return;}
+  if(nueva.length<6){err.textContent='La nueva contraseña debe tener al menos 6 caracteres';return;}
+  if(nueva!==confirm){err.textContent='Las contraseñas no coinciden';return;}
+  const i=users.findIndex(u=>u.id===curUser.id);
+  if(i!==-1){users[i].pass=nueva;curUser.pass=nueva;}
+  saveAll();el('cpActual').value='';el('cpNueva').value='';el('cpConfirm').value='';err.textContent='';
+  showToast('✅','Contraseña actualizada correctamente');
+}
+
+/* ═══ OVERLAYS ═══ */
+function openOv(id){if(el(id))el(id).classList.add('show');}
+function closeOvD(id){if(el(id))el(id).classList.remove('show');}
+function closeOv(id,e){if(e.target===el(id))closeOvD(id);}
+
+/* ═══ TOAST ═══ */
+function showToast(icon,msg){
+  const t=document.createElement('div');t.className='toast';
+  t.innerHTML=`<span style="font-size:16px">${icon}</span><span class="toast-msg">${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},3200);
+}
+
+/* ═══ INIT ═══ */
+setNow();updateTopbarDate();
+</script></body></html>
